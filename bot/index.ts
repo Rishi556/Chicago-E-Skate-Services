@@ -1,4 +1,4 @@
-import { Telegraf } from 'telegraf';
+import { Bot } from 'grammy';
 import { basicCommands, commands } from './utils/commands';
 import escapeChars from './utils/escapeChars';
 import { getUserById, tgToDbUser, updateUser } from './handlers/dbHandlers';
@@ -26,7 +26,7 @@ import { random } from './handlers/externalHandlers';
 import { HttpFunction } from '@google-cloud/functions-framework';
 
 const { BOT_TOKEN, PROJECT_ID, FUNCTION_NAME, REGION } = process.env;
-const bot = new Telegraf(BOT_TOKEN || '');
+const bot = new Bot(BOT_TOKEN || '');
 
 /*
 Command - Description to send to Bot Father
