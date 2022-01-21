@@ -14,6 +14,7 @@ let _db: Firestore;
 const db = () => {
   if (_db === undefined) {
     const tokenInfo = Base64.decode(process.env.FIRESTORE_TOKEN || '');
+    console.log(tokenInfo);
     const tokenObject = JSON.parse(tokenInfo);
     const clientEmail = tokenObject.client_email;
     const privateKey = tokenObject.private_key;
@@ -30,7 +31,7 @@ const db = () => {
   return _db;
 };
 
-const getChargeSpots = async () => {
+export const getChargeSpots = async () => {
   const dat = await db().collection('charge').get();
   const ret: Array<ChargeSpot> = [];
   dat.forEach((item) => {
@@ -39,11 +40,11 @@ const getChargeSpots = async () => {
   return ret;
 };
 
-const createSpotEntry = (spot: ChargeSpot): string => {
+export const createSpotEntry = (spot: ChargeSpot): string => {
   return `[{ lat: ${spot.lat}, lng: ${spot.lon} }, "${spot.description}"]`;
 };
 
-const createArrayString = (spots: Array<ChargeSpot>): string => {
+export const createArrayString = (spots: Array<ChargeSpot>): string => {
   return `
     const chargeSpots = [
       ${spots.map((spot) => createSpotEntry(spot)).join(',\n')}
@@ -51,27 +52,10 @@ const createArrayString = (spots: Array<ChargeSpot>): string => {
   `;
 };
 
-// const createMarkerText = (spot: ChargeSpot): string => {
-//   return `
-//     marker = new google.maps.Marker({
-//       position: {
-//         lat: ${spot.lat},
-//         lng: ${spot.lon}
-//       },
-//       title: "${spot.description}",
-//       map,
-//       optimized: false,
-//     });
-
-//     marker.addListener("click", () => {
-//       infoWindow.close();
-//       infoWindow.setContent(marker.getTitle());
-//       infoWindow.open(marker.getMap(), marker);
-//     });
-//   `;
-// };
-
-const chargingHandler = async (req: Express.Request, res: Express.Response) => {
+export const chargingHandler = async (
+  req: Express.Request,
+  res: Express.Response,
+) => {
   res.set('Access-Control-Allow-Origin', '*');
   res.set('Access-Control-Allow-Methods', 'GET');
   const spots = await getChargeSpots();
@@ -136,7 +120,10 @@ const chargingHandler = async (req: Express.Request, res: Express.Response) => {
   res.status(200).send(ret);
 };
 
-const fetchRide = async (req: Express.Request, res: Express.Response) => {
+export const fetchRide = async (
+  req: Express.Request,
+  res: Express.Response,
+) => {
   res.set('Access-Control-Allow-Origin', '*');
   res.set('Access-Control-Allow-Methods', 'GET');
   if (req.method === 'GET') {
@@ -150,5 +137,3 @@ const fetchRide = async (req: Express.Request, res: Express.Response) => {
     res.status(400).send('Error: wrong method');
   }
 };
-
-module.exports = { fetchRide, chargingHandler };

@@ -4,12 +4,6 @@ steps:
     args: 
       - install
 
-  # Run Unit Tests
-  - name: "npm"
-    args:
-      - run
-      - test:unit
-
   # Build all
   - name: 'gcr.io/cloud-builders/npm'
     args:
@@ -52,20 +46,3 @@ steps:
 
 
   
-  
-      # TODO: Re-Add Client Deploys
-
-  # Deploy Client
-  # # NPM Install
-  # - name: "gcr.io/cloud-builders/npm"
-  #   args: ["--prefix", "./client/", "install"]
-  # # NPM Build
-  # - name: "gcr.io/cloud-builders/npm"
-  #   args: ["run", "build", "--prefix", "./client/"]
-  # # GCloud Deploy
-  # - name: "gcr.io/cloud-builders/gcloud"
-  #   args:
-  #     - "app"
-  #     - "deploy"
-  #     - "./client/client.yaml"
-  #     - "--no-promote"
